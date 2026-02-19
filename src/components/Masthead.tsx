@@ -14,33 +14,35 @@ const Masthead = ({ stats, showAbout, onAboutToggle }: MastheadProps) => {
     : null;
 
   return (
-    <header className="max-w-[1100px] mx-auto px-4 pt-8 pb-4">
-      {/* Relative container so title can be absolutely centred */}
-      <div className="relative flex items-start sm:items-center justify-between min-h-[4.5rem]">
+    <header className="max-w-[1100px] mx-auto px-4 pt-6 pb-4">
 
-        {/* Title — absolutely centred regardless of right-side width */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
+      {/* Mobile: stacked column with centred title.
+          Desktop (sm+): relative row — title absolutely centred, controls on right */}
+      <div className="flex flex-col items-center gap-3 sm:relative sm:flex sm:flex-row sm:items-center sm:justify-between sm:min-h-[4.5rem] sm:gap-0">
+
+        {/* Title — centred on both mobile and desktop */}
+        <div className="text-center sm:absolute sm:inset-0 sm:flex sm:flex-col sm:items-center sm:justify-center pointer-events-none select-none">
           <h1 className="font-serif-display text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
             shared ground
           </h1>
           <p className="mt-1 text-sm text-muted-foreground font-sans">
-            Browse your news on your terms.
+            browse your news on your terms.
           </p>
         </div>
 
-        {/* Right controls — in normal flow, pushed to the right */}
-        <div className="ml-auto flex flex-col items-end gap-2 relative z-10">
+        {/* Controls — row on mobile, column on desktop (right-aligned) */}
+        <div className="flex items-center gap-3 sm:ml-auto sm:flex-col sm:items-end sm:gap-2 relative z-10">
           <div className="flex items-center gap-3">
             <button
               onClick={onAboutToggle}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors font-sans"
             >
-              {showAbout ? "← Back" : "About"}
+              {showAbout ? "← back" : "about"}
             </button>
             <ThemeToggle />
           </div>
           {!showAbout && stats && (
-            <div className="text-right text-xs text-muted-foreground uppercase tracking-wider font-sans leading-relaxed">
+            <div className="hidden sm:block text-right text-xs text-muted-foreground uppercase tracking-wider font-sans leading-relaxed">
               <div>{stats.total.toLocaleString()} articles</div>
               {lastScraped && <div>Updated {lastScraped}</div>}
             </div>
