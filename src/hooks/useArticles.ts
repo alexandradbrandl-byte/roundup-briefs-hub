@@ -3,20 +3,20 @@ import { API_BASE, type Article, type Stats } from "@/lib/constants";
 
 export interface Filters {
   selectedTopics: string[];
+  selectedSources: string[];   // multi-select — empty means "all"
   timeRange: string | null;
   dateFrom: string;
   dateTo: string;
   search: string;
-  source: string;
 }
 
 const defaultFilters: Filters = {
   selectedTopics: [],
+  selectedSources: [],
   timeRange: null,
   dateFrom: "",
   dateTo: "",
   search: "",
-  source: "",
 };
 
 export function useArticles() {
@@ -57,11 +57,11 @@ export function useArticles() {
   const isFiltered = useMemo(() => {
     return (
       filters.selectedTopics.length > 0 ||
+      filters.selectedSources.length > 0 ||
       filters.timeRange !== null ||
       filters.dateFrom !== "" ||
       filters.dateTo !== "" ||
-      filters.search !== "" ||
-      filters.source !== ""
+      filters.search !== ""
     );
   }, [filters]);
 
@@ -72,11 +72,15 @@ export function useArticles() {
         const articleTopics = (article.topics || "")
           .split(",")
           .map((t) => t.trim());
-        const match = filters.selectedTopics.some((t) => articleTopics.includes(t));
-        if (!match) return false;
+        if (!filters.selectedTopics.some((t) => articleTopics.includes(t))) return false;
       }
 
-      // Use published_at for date filtering (real article date), fall back to scraped_at
+      // Source filter (multi-select, OR logic)
+      if (filters.selectedSources.length > 0) {
+        if (!filters.selectedSources.includes(article.source)) return false;
+      }
+
+      // Use published_at for date filtering, fall back to scraped_at
       const articleDate = new Date(article.published_at || article.scraped_at);
 
       // Time range filter
@@ -84,43 +88,14 @@ export function useArticles() {
         const now = new Date();
         const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
         const today = startOfDay(now);
-
         switch (filters.timeRange) {
           case "today":
             if (articleDate < today) return false;
             break;
-          case "this_week": {
-            const day = now.getDay();
-            const monday = new Date(today);
-            monday.setDate(today.getDate() - ((day + 6) % 7));
-            if (articleDate < monday) return false;
-            break;
-          }
-          case "last_week": {
-            const day = now.getDay();
-            const thisMonday = new Date(today);
-            thisMonday.setDate(today.getDate() - ((day + 6) % 7));
-            const lastMonday = new Date(thisMonday);
-            lastMonday.setDate(thisMonday.getDate() - 7);
-            if (articleDate < lastMonday || articleDate >= thisMonday) return false;
-            break;
-          }
-          case "last_month": {
-            const monthAgo = new Date(today);
-            monthAgo.setMonth(monthAgo.getMonth() - 1);
-            if (articleDate < monthAgo) return false;
-            break;
-          }
-          case "last_year": {
-            const yearAgo = new Date(today);
-            yearAgo.setFullYear(yearAgo.getFullYear() - 1);
-            if (articleDate < yearAgo) return false;
-            break;
-          }
         }
       }
 
-      // Custom date range (also uses published_at)
+      // Custom date range
       if (filters.dateFrom) {
         if (articleDate < new Date(filters.dateFrom)) return false;
       }
@@ -137,9 +112,6 @@ export function useArticles() {
         const inSummary = (article.summary || "").toLowerCase().includes(q);
         if (!inTitle && !inSummary) return false;
       }
-
-      // Source
-      if (filters.source && article.source !== filters.source) return false;
 
       return true;
     });
