@@ -7,14 +7,32 @@ interface ArticleCardProps {
 
 const MAX_VISIBLE_TAGS = 3;
 
+const TOPIC_ICONS: Record<string, string> = {
+  "Reproductive Rights":   "🩺",
+  "Gender Pay Gap":        "💰",
+  "LGBTQIA+":              "🏳️‍🌈",
+  "Immigration":           "🌍",
+  "Human Rights":          "⚖️",
+  "Health & Medicine":     "🏥",
+  "Law & Policy":          "📜",
+  "Politics & Government": "🏛️",
+  "Culture & Media":       "🎭",
+  "Sports":                "⚽",
+  "Violence & Safety":     "🛡️",
+  "Workplace & Economics": "💼",
+};
+
 const ArticleCard = ({ article }: ArticleCardProps) => {
   const stripColor = getSourceBorderColor(article.source);
   const topics = (article.topics || "")
     .split(",")
     .map((t) => t.trim())
     .filter(Boolean);
-  const dateStr = article.scraped_at
-    ? format(new Date(article.scraped_at), "d MMM yyyy")
+
+  // Use the article's real publication date; fall back to scraped_at
+  const displayDate = article.published_at || article.scraped_at;
+  const dateStr = displayDate
+    ? format(new Date(displayDate), "d MMM yyyy")
     : "";
 
   const visibleTopics = topics.slice(0, MAX_VISIBLE_TAGS);
@@ -26,9 +44,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
       target="_blank"
       rel="noopener noreferrer"
       className="block bg-card border border-border rounded-sm overflow-hidden transition-all duration-150 hover:bg-surface-hover hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group"
-      style={{
-        boxShadow: "var(--tile-shadow)",
-      }}
+      style={{ boxShadow: "var(--tile-shadow)" }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.boxShadow = "var(--tile-shadow-hover)";
       }}
@@ -70,7 +86,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
                 key={topic}
                 className="inline-block px-2 py-0.5 text-[0.65rem] font-medium border border-border bg-background text-foreground rounded-none"
               >
-                {topic}
+                {TOPIC_ICONS[topic] && `${TOPIC_ICONS[topic]} `}{topic}
               </span>
             ))}
             {extraCount > 0 && (
