@@ -3,19 +3,13 @@ import { TOPICS } from "@/lib/constants";
 import { type Filters } from "@/hooks/useArticles";
 import { Search, X, ChevronDown, Check } from "lucide-react";
 
-// All sources — sorted alphabetically
+// Alle Quellen — alphabetisch sortiert
 const ALL_SOURCES = [
-  "ABC News", "Accuracy in Media", "Advocate", "Al Jazeera", "AlterNet",
-  "Associated Press", "Autostraddle", "BBC News", "BBC News World",
-  "CBC News World", "CNN World", "Democracy Now", "Fair Observer",
-  "Feministing", "Financial Times", "FSRN", "Gay Times", "Global Voices",
-  "HuffPost", "IPS News Agency", "Jezebel", "Jewish Voice for Peace",
-  "Le Monde", "Le Monde Diplomatique", "LGBTQ Nation", "Media Matters",
-  "Ms. Magazine", "New York Times", "NPR News", "Out Magazine", "PinkNews",
-  "Queerty", "Refinery29 Feminism", "Reveal News", "Reuters", "Reuters World",
-  "SBS News World", "The Conversation", "The Funambulist", "The Guardian",
-  "The Guardian Women", "The Independent", "The Progressive", "Them",
-  "Washington Post", "Xtra Magazine",
+  "BR24", "Der Standard", "Deutschlandfunk", "Die Welt", "EMMA",
+  "FAZ", "Focus Online", "Freitag", "L-MAG", "MDR Nachrichten",
+  "NDR Nachrichten", "NZZ", "ORF News", "Spiegel Online", "SRF News",
+  "Stern", "Süddeutsche Zeitung", "Tagesspiegel", "Tagesschau",
+  "taz", "ZDF heute", "Zeit Online", "queer.de",
 ];
 
 interface FilterBarProps {
@@ -48,7 +42,7 @@ const FilterBar = ({
     return () => clearTimeout(debounceRef.current);
   }, [searchInput, setFilters]);
 
-  // Close source dropdown on outside click
+  // Dropdown schließen bei Klick außerhalb
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (sourceRef.current && !sourceRef.current.contains(e.target as Node)) {
@@ -62,7 +56,7 @@ const FilterBar = ({
   const toggleTopic = useCallback(
     (label: string) => {
       setFilters((f) => {
-        if (label === "All Topics") return { ...f, selectedTopics: [] };
+        if (label === "Alle Themen") return { ...f, selectedTopics: [] };
         const next = f.selectedTopics.includes(label)
           ? f.selectedTopics.filter((t) => t !== label)
           : [...f.selectedTopics, label];
@@ -113,19 +107,19 @@ const FilterBar = ({
 
   const sourceLabel =
     filters.selectedSources.length === 0
-      ? "All Sources"
+      ? "Alle Quellen"
       : filters.selectedSources.length === 1
       ? filters.selectedSources[0]
-      : `${filters.selectedSources.length} sources`;
+      : `${filters.selectedSources.length} Quellen`;
 
   return (
     <div className="sticky top-0 z-30 bg-card border-b border-border">
       <div className="max-w-[1100px] mx-auto px-4 py-3 space-y-3">
 
-        {/* ROW A — Topics (horizontally scrollable) */}
+        {/* ZEILE A — Themen (horizontal scrollbar) */}
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
           {TOPICS.map((t) => {
-            const isAll = t.label === "All Topics";
+            const isAll = t.label === "Alle Themen";
             const active = isAll
               ? filters.selectedTopics.length === 0
               : filters.selectedTopics.includes(t.label);
@@ -147,7 +141,7 @@ const FilterBar = ({
           })}
         </div>
 
-        {/* ROW B — Today + Custom Date Range */}
+        {/* ZEILE B — Heute + Datumsbereich */}
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={selectToday}
@@ -158,7 +152,7 @@ const FilterBar = ({
                 : "bg-secondary text-secondary-foreground hover:bg-border"}
             `}
           >
-            Today
+            Heute
           </button>
           <span className="hidden sm:inline text-muted-foreground text-xs mx-1">📅</span>
           <input
@@ -166,31 +160,31 @@ const FilterBar = ({
             value={filters.dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
             className="text-xs px-2 py-1.5 rounded-sm border border-border bg-card text-foreground w-full sm:w-auto"
-            aria-label="Date from"
+            aria-label="Von Datum"
           />
-          <span className="text-xs text-muted-foreground">to</span>
+          <span className="text-xs text-muted-foreground">bis</span>
           <input
             type="date"
             value={filters.dateTo}
             onChange={(e) => setDateTo(e.target.value)}
             className="text-xs px-2 py-1.5 rounded-sm border border-border bg-card text-foreground w-full sm:w-auto"
-            aria-label="Date to"
+            aria-label="Bis Datum"
           />
           {(filters.dateFrom || filters.dateTo) && (
             <button
               onClick={clearDates}
               className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Clear dates"
+              aria-label="Datum zurücksetzen"
             >
               <X size={14} />
             </button>
           )}
         </div>
 
-        {/* ROW C — Search + Multi-Source dropdown + Clear + Count */}
+        {/* ZEILE C — Suche + Quellen-Dropdown + Zurücksetzen + Anzahl */}
         <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2">
 
-          {/* Search */}
+          {/* Suche */}
           <div className="relative flex-1 min-w-0 sm:min-w-[180px] sm:max-w-[320px]">
             <Search
               size={14}
@@ -200,12 +194,12 @@ const FilterBar = ({
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search headlines…"
+              placeholder="Schlagzeilen durchsuchen…"
               className="w-full text-xs pl-8 pr-3 py-1.5 rounded-sm border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
             />
           </div>
 
-          {/* Multi-select source dropdown */}
+          {/* Quellen-Dropdown */}
           <div ref={sourceRef} className="relative">
             <button
               onClick={() => setSourceOpen((o) => !o)}
@@ -219,13 +213,12 @@ const FilterBar = ({
 
             {sourceOpen && (
               <div className="absolute top-full left-0 mt-1 w-64 max-h-72 overflow-y-auto bg-card border border-border rounded-sm shadow-lg z-50">
-                {/* Clear selection row */}
                 {filters.selectedSources.length > 0 && (
                   <button
                     onClick={clearSources}
                     className="w-full text-left px-3 py-2 text-xs text-primary hover:bg-secondary border-b border-border font-medium"
                   >
-                    Clear selection ({filters.selectedSources.length})
+                    Auswahl löschen ({filters.selectedSources.length})
                   </button>
                 )}
                 {ALL_SOURCES.map((s) => {
@@ -249,7 +242,7 @@ const FilterBar = ({
             )}
           </div>
 
-          {/* Clear all + count */}
+          {/* Alles löschen + Anzahl */}
           <div className="flex items-center gap-2 sm:ml-auto">
             {isFiltered && (
               <button
@@ -259,11 +252,11 @@ const FilterBar = ({
                 }}
                 className="text-xs text-primary hover:underline font-medium whitespace-nowrap"
               >
-                Clear all
+                Alles löschen
               </button>
             )}
             <span className="text-xs text-muted-foreground whitespace-nowrap">
-              {articleCount} article{articleCount !== 1 ? "s" : ""}
+              {articleCount} {articleCount !== 1 ? "Artikel" : "Artikel"}
             </span>
           </div>
         </div>
