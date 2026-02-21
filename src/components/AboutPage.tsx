@@ -1,86 +1,74 @@
 const KEYWORDS = {
-  "Women & Feminism": [
-    "women", "woman", "girl", "girls", "female", "feminine", "feminism", "feminist",
-    "gender equality", "gender gap", "gender pay gap", "equal pay", "pay equity",
-    "wage gap", "pay disparity", "reproductive rights", "abortion", "pro-choice",
-    "planned parenthood", "maternity", "maternal", "maternal health", "maternal mortality",
-    "women's rights", "sexism", "misogyny", "patriarchy", "period poverty", "menstrual",
-    "menstruation", "women's health", "gynecolog", "obstetric", "domestic violence",
-    "gender violence", "gender-based violence", "sexual harassment", "sexual assault",
-    "rape", "metoo", "me too", "#metoo", "femicide", "honour killing", "honor killing",
-    "female genital mutilation", "fgm", "child marriage", "forced marriage",
-    "women in leadership", "women in sport", "women in politics", "glass ceiling",
-    "motherhood penalty", "parental leave", "maternity leave", "surrogacy",
-    "reproductive justice", "bodily autonomy", "trafficking", "sex trafficking",
-    "exploitation", "body image", "eating disorder", "diet culture", "birth control",
-    "contraception", "ivf", "fertility", "breastfeeding", "postpartum", "prenatal",
-    "postnatal", "intersectional feminism", "fourth wave feminism", "ecofeminism",
-    "women's march", "women's movement",
+  "Frauen & Feminismus": [
+    "frauen", "frau", "mädchen", "weiblich", "feminismus", "feministisch",
+    "gleichberechtigung", "gleichstellung", "frauenrechte", "frauenquote",
+    "lohnlücke", "lohnungleichheit", "entgeltungleichheit", "abtreibung",
+    "schwangerschaftsabbruch", "paragraph 218", "mutterschaft", "schwangerschaft",
+    "mutterschutz", "elterngeld", "elternzeit", "sexismus", "misogynie", "patriarchat",
+    "häusliche gewalt", "femizid", "sexuelle belästigung", "vergewaltigung",
+    "me-too", "metoo", "menstruation", "verhütung", "trafficking", "menschenhandel",
+    "women", "woman", "girl", "female", "feminism", "feminist", "gender equality",
+    "reproductive rights", "abortion", "domestic violence", "femicide",
   ],
   "LGBTQIA+": [
-    "lgbt", "lgbtq", "lgbtqia", "queer", "gay", "lesbian", "bisexual", "transgender",
-    "trans", "nonbinary", "non-binary", "intersex", "asexual", "pansexual", "aromantic",
-    "agender", "genderfluid", "pride", "pride parade", "coming out", "closeted", "outing",
-    "same-sex", "gay marriage", "gay rights", "trans rights", "queer rights",
-    "marriage equality", "rainbow", "homophobia", "transphobia", "biphobia",
-    "queerphobia", "conversion therapy", "reparative therapy", "gender affirming",
-    "gender affirming care", "puberty blocker", "gender identity", "gender expression",
-    "gender dysphoria", "pronouns", "deadnaming", "misgendering", "two-spirit", "hijra",
-    "third gender", "drag", "drag queen", "drag king", "drag race", "section 28",
-    "don't say gay", "bathroom bill", "lgbtq youth", "queer community", "queer family",
+    "schwul", "lesbisch", "bisexuell", "transgender", "transsexuell",
+    "nicht-binär", "nichtbinär", "intergeschlechtlich", "queer", "homosexuell",
+    "coming out", "homophobie", "transphobie", "csd", "christopher street day",
+    "ehe für alle", "drag queen", "drag king", "geschlechtsidentität",
+    "pronomen", "lsbtiq", "konversionstherapie", "geschlechtsangleichung",
+    "pubertätsblocker", "lgbt", "lgbtq", "lgbtqia", "gay", "lesbian", "bisexual",
+    "trans rights", "homophobia", "transphobia", "pride", "same-sex",
   ],
-  "Immigration & Asylum": [
-    "immigration", "immigrant", "refugee", "asylum", "asylum seeker", "migrant",
-    "migration", "undocumented", "unauthorized", "deportation", "deported", "border",
-    "border wall", "visa", "citizenship", "naturalization", "stateless", "detention",
-    "detention center", "ice raid", "displacement", "displaced persons", "diaspora",
-    "daca", "dreamers", "sanctuary", "resettlement", "xenophobia", "nativism",
-    "anti-immigrant", "human trafficking", "smuggling",
+  "Migration & Asyl": [
+    "flüchtling", "geflüchtete", "asylsuchende", "asylbewerber", "migration",
+    "migrant", "einwanderung", "abschiebung", "aufenthaltsrecht", "einbürgerung",
+    "fremdenfeindlichkeit", "flucht", "vertreibung", "immigration", "refugee",
+    "asylum", "deportation", "citizenship", "xenophobia",
   ],
-  "Human Rights": [
-    "human rights", "civil rights", "civil liberties", "discrimination", "prejudice",
-    "bigotry", "equality", "equity", "justice", "injustice", "oppression",
-    "persecution", "marginalised", "marginalized", "minority rights", "indigenous rights",
-    "indigenous peoples", "racial justice", "racism", "anti-racism", "systemic racism",
-    "protest", "activist", "activism", "advocacy", "censorship", "free speech",
-    "press freedom", "political prisoner", "prisoner of conscience", "genocide",
-    "ethnic cleansing", "war crimes", "crimes against humanity", "apartheid",
-    "reparations", "accountability", "humanitarian", "humanitarian crisis",
-    "humanitarian aid", "amnesty", "disability rights", "ableism",
+  "Menschenrechte": [
+    "menschenrechte", "bürgerrechte", "diskriminierung", "rassismus",
+    "antirassismus", "protest", "aktivismus", "zensur", "pressefreiheit",
+    "minderheitenrechte", "humanitär", "human rights", "civil rights",
+    "discrimination", "racism", "activism", "censorship",
   ],
 };
 
 const SOURCES = {
-  "General news (keyword-filtered)": [
-    "BBC News", "BBC News World", "The Guardian", "Reuters", "Reuters World",
-    "Al Jazeera", "NPR News", "The Independent", "HuffPost", "New York Times",
-    "Associated Press", "CNN World", "Washington Post", "Financial Times",
-    "CBC News World", "ABC News", "SBS News World", "Le Monde", "IPS News Agency",
-    "The Conversation", "Global Voices", "Fair Observer",
+  "Tageszeitungen (keyword-gefiltert)": [
+    "Spiegel Online", "Zeit Online", "FAZ", "Süddeutsche Zeitung",
+    "Die Welt", "Tagesspiegel", "Stern", "Focus Online",
   ],
-  "Women & Feminist publications (all articles included)": [
-    "The Guardian Women", "Ms. Magazine", "Feministing", "Jezebel",
-    "Refinery29 Feminism", "The Funambulist",
+  "Öffentlich-Rechtliche (keyword-gefiltert)": [
+    "Tagesschau", "ZDF heute", "Deutschlandfunk", "BR24",
+    "MDR Nachrichten", "NDR Nachrichten",
   ],
-  "LGBTQIA+ publications (all articles included)": [
-    "Gay Times", "PinkNews", "Out Magazine", "LGBTQ Nation", "Advocate",
-    "Autostraddle", "Them", "Queerty", "Xtra Magazine",
+  "Progressive Medien (keyword-gefiltert)": [
+    "taz", "Freitag",
+  ],
+  "Österreich & Schweiz (keyword-gefiltert)": [
+    "Der Standard", "ORF News", "NZZ", "SRF News",
+  ],
+  "Feministische Publikationen (alle Artikel inklusive)": [
+    "EMMA",
+  ],
+  "LGBTQIA+ Publikationen (alle Artikel inklusive)": [
+    "queer.de", "L-MAG",
   ],
 };
 
 const TOPICS_LIST = [
-  { emoji: "🩺", label: "Reproductive Rights" },
-  { emoji: "💰", label: "Gender Pay Gap" },
+  { emoji: "🩺", label: "Reproduktive Rechte" },
+  { emoji: "💰", label: "Lohnlücke & Wirtschaft" },
   { emoji: "🏳️‍🌈", label: "LGBTQIA+" },
-  { emoji: "🌍", label: "Immigration" },
-  { emoji: "⚖️", label: "Human Rights" },
-  { emoji: "🏥", label: "Health & Medicine" },
-  { emoji: "📜", label: "Law & Policy" },
-  { emoji: "🏛️", label: "Politics & Government" },
-  { emoji: "🎭", label: "Culture & Media" },
-  { emoji: "⚽", label: "Sports" },
-  { emoji: "🛡️", label: "Violence & Safety" },
-  { emoji: "💼", label: "Workplace & Economics" },
+  { emoji: "🌍", label: "Migration & Asyl" },
+  { emoji: "⚖️", label: "Menschenrechte" },
+  { emoji: "🏥", label: "Gesundheit & Medizin" },
+  { emoji: "📜", label: "Recht & Politik" },
+  { emoji: "🏛️", label: "Politik & Regierung" },
+  { emoji: "🎭", label: "Kultur & Medien" },
+  { emoji: "⚽", label: "Sport" },
+  { emoji: "🛡️", label: "Gewalt & Sicherheit" },
+  { emoji: "💼", label: "Arbeit & Wirtschaft" },
 ];
 
 const SectionHeading = ({ children }: { children: React.ReactNode }) => (
@@ -95,15 +83,16 @@ const AboutPage = () => {
 
       {/* Intro */}
       <p className="text-[0.95rem] text-foreground leading-relaxed">
-        <strong>shared ground</strong> is an independent news reader aggregating
-        feminist, women's, and LGBTQIA+ news from around the world. Articles are
-        scraped from RSS feeds every 12 hours (CET). Only publicly accessible
-        articles are included — paywalled or restricted content may not appear even
-        if it matches a topic.
+        <strong>shared ground</strong> ist ein unabhängiger Nachrichtenleser,
+        der feministische, frauenpolitische und LGBTQIA+-Nachrichten aus dem
+        deutschsprachigen Raum aggregiert. Artikel werden alle 12 Stunden
+        (MEZ) aus RSS-Feeds gescrapt. Es werden nur öffentlich zugängliche
+        Artikel einbezogen — kostenpflichtige Inhalte erscheinen möglicherweise
+        nicht, auch wenn sie einem Thema entsprechen.
       </p>
 
-      {/* Sources */}
-      <SectionHeading>Our Sources — 37 publications</SectionHeading>
+      {/* Quellen */}
+      <SectionHeading>Unsere Quellen — 23 Publikationen</SectionHeading>
       {Object.entries(SOURCES).map(([category, names]) => (
         <div key={category} className="mb-5">
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2 font-medium">
@@ -115,12 +104,13 @@ const AboutPage = () => {
         </div>
       ))}
 
-      {/* How articles are selected */}
-      <SectionHeading>How articles are selected</SectionHeading>
+      {/* Artikelauswahl */}
+      <SectionHeading>Wie Artikel ausgewählt werden</SectionHeading>
       <p className="text-[0.9rem] text-muted-foreground leading-relaxed mb-6">
-        For general news sources, articles are only included if they contain at
-        least one of the following keywords in the headline or summary.
-        Specialist publications (Women &amp; Feminist, LGBTQIA+) include all articles.
+        Bei allgemeinen Nachrichtenquellen werden Artikel nur aufgenommen,
+        wenn sie mindestens eines der folgenden Stichwörter in der Überschrift
+        oder Zusammenfassung enthalten. Spezialpublikationen (Feministische
+        &amp; LGBTQIA+ Medien) werden vollständig übernommen.
       </p>
       {Object.entries(KEYWORDS).map(([category, words]) => (
         <div key={category} className="mb-6">
@@ -133,10 +123,10 @@ const AboutPage = () => {
         </div>
       ))}
 
-      {/* Topics */}
-      <SectionHeading>Topics</SectionHeading>
+      {/* Themen */}
+      <SectionHeading>Themen</SectionHeading>
       <p className="text-[0.9rem] text-muted-foreground leading-relaxed mb-4">
-        Articles are automatically tagged with topics based on keyword matching.
+        Artikel werden automatisch anhand von Keyword-Matching mit Themen getaggt.
       </p>
       <div className="flex flex-wrap gap-2">
         {TOPICS_LIST.map((t) => (
@@ -149,9 +139,9 @@ const AboutPage = () => {
         ))}
       </div>
 
-      {/* Footer note */}
+      {/* Footer */}
       <p className="mt-12 text-xs text-muted-foreground border-t border-border pt-4">
-        shared ground · Scrapes every 12 hours · Built for independent readers
+        shared ground · Scrapet alle 12 Stunden · Für unabhängige Leser:innen
       </p>
     </main>
   );
