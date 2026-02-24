@@ -1,108 +1,231 @@
-import { format } from "date-fns";
-import { type Article, getSourceBorderColor } from "@/lib/constants";
+import { TOPIC_COLORS, getSourceBorderColor } from "@/lib/constants";
+import type { Article } from "@/lib/constants";
 
-interface ArticleCardProps {
-  article: Article;
+type Variant = "hero" | "medium" | "default";
+
+interface Props {
+  article: Article & { image_url?: string };
+  variant?: Variant;
 }
 
-const MAX_VISIBLE_TAGS = 3;
-
 const TOPIC_ICONS: Record<string, string> = {
-  "Reproductive Rights":   "🩺",
-  "Gender Pay Gap":        "💰",
-  "LGBTQIA+":              "🏳️‍🌈",
-  "Immigration":           "🌍",
-  "Human Rights":          "⚖️",
-  "Health & Medicine":     "🏥",
-  "Law & Policy":          "📜",
-  "Politics & Government": "🏛️",
-  "Culture & Media":       "🎭",
-  "Sports":                "⚽",
-  "Violence & Safety":     "🛡️",
-  "Workplace & Economics": "💼",
+  "Reproduktive Rechte":    "🩺",
+  "Lohnlücke & Wirtschaft": "💰",
+  "LGBTQIA+":               "🏳️‍🌈",
+  "Migration & Asyl":       "🌍",
+  "Menschenrechte":         "⚖️",
+  "Gesundheit & Medizin":   "🏥",
+  "Recht & Justiz":         "📜",
+  "Recht & Politik":        "📜",
+  "Politik & Gesellschaft": "🏛️",
+  "Politik & Regierung":    "🏛️",
+  "Kultur & Medien":        "🎭",
+  "Sport":                  "⚽",
+  "Gewalt & Sicherheit":    "🛡️",
+  "Arbeit & Wirtschaft":    "💼",
 };
 
-const ArticleCard = ({ article }: ArticleCardProps) => {
-  const stripColor = getSourceBorderColor(article.source);
-  const topics = (article.topics || "")
+function formatDate(dateStr?: string): string {
+  if (!dateStr) return "";
+  try {
+    return new Intl.DateTimeFormat("de-DE", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(dateStr));
+  } catch {
+    return "";
+  }
+}
+
+function TopicTags({ topics, limit = 3 }: { topics: string; limit?: number }) {
+  const list = (topics || "")
     .split(",")
     .map((t) => t.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .slice(0, limit);
 
-  // Use the article's real publication date; fall back to scraped_at
-  const displayDate = article.published_at || article.scraped_at;
-  const dateStr = displayDate
-    ? format(new Date(displayDate), "d MMM yyyy")
-    : "";
-
-  const visibleTopics = topics.slice(0, MAX_VISIBLE_TAGS);
-  const extraCount = topics.length - MAX_VISIBLE_TAGS;
+  if (list.length === 0) return null;
 
   return (
-    <a
-      href={article.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block bg-card border border-border rounded-sm overflow-hidden transition-all duration-150 hover:bg-surface-hover hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group"
-      style={{ boxShadow: "var(--tile-shadow)" }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = "var(--tile-shadow-hover)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = "var(--tile-shadow)";
-      }}
-    >
-      {/* Accent strip */}
-      <div className="h-[3px] w-full" style={{ backgroundColor: stripColor }} />
+    <div className="flex flex-wrap gap-1">
+      {list.map((t) => {
+        const colors = TOPIC_COLORS[t];
+        const icon = TOPIC_ICONS[t] ?? "";
+        return (
+          <span
+            key={t}
+            className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[0.62rem] font-medium rounded-sm border"
+            style={
+              colors
+                ? { backgroundColor: colors.bg, color: colors.text, borderColor: colors.border }
+                : { backgroundColor: "var(--secondary)", color: "var(--foreground)", borderColor: "var(--border)" }
+            }
+          >
+            {icon} {t}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
 
-      <div className="p-5 flex flex-col gap-3">
-        {/* Meta row */}
-        <div className="flex items-center justify-between">
-          <span className="inline-block px-2 py-0.5 rounded-sm text-[0.68rem] font-semibold uppercase tracking-wider bg-secondary text-muted-foreground">
+const ArticleCard = ({ article, variant = "default" }: Props) => {
+  const borderColor = getSourceBorderColor(article.source);
+  const date = formatDate(article.published_at || article.scraped_at);
+  const imageUrl = article.image_url;
+
+  // ── HERO ──────────────────────────────────────────────────────────────────
+  if (variant === "hero") {
+    return (
+      <article className="group bg-card border border-border overflow-hidden hover:shadow-md transition-shadow">
+        <div className="flex flex-col sm:flex-row">
+          {imageUrl && (
+            <div className="sm:w-[48%] flex-shrink-0 overflow-hidden">
+              <img
+                src={imageUrl}
+                alt={article.title}
+                className="w-full h-56 sm:h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                onError={(e) => {
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) parent.style.display = "none";
+                }}
+              />
+            </div>
+          )}
+          <div
+            className="flex flex-col justify-between p-5 sm:p-6 flex-1"
+            style={{
+              borderLeft: imageUrl ? `3px solid ${borderColor}` : undefined,
+              borderTop: !imageUrl ? `3px solid ${borderColor}` : undefined,
+            }}
+          >
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  {article.source}
+                </span>
+                {date && <span className="text-xs text-muted-foreground">{date}</span>}
+              </div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground leading-snug mb-3 group-hover:text-primary transition-colors">
+                {article.title}
+              </h2>
+              {article.summary && (
+                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+                  {article.summary}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-3 mt-2">
+              {article.topics && <TopicTags topics={article.topics} limit={3} />}
+              
+                href={article.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold text-primary hover:underline underline-offset-2"
+              >
+                Artikel lesen →
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  // ── MEDIUM ────────────────────────────────────────────────────────────────
+  if (variant === "medium") {
+    return (
+      <article
+        className="group bg-card border border-border overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full"
+        style={{ borderTop: `3px solid ${borderColor}` }}
+      >
+        {imageUrl && (
+          <div className="overflow-hidden">
+            <img
+              src={imageUrl}
+              alt={article.title}
+              className="w-full h-44 object-cover group-hover:scale-[1.02] transition-transform duration-300"
+              onError={(e) => {
+                const parent = e.currentTarget.parentElement;
+                if (parent) parent.style.display = "none";
+              }}
+            />
+          </div>
+        )}
+        <div className="flex flex-col flex-1 p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[0.65rem] font-semibold text-muted-foreground uppercase tracking-wider">
+              {article.source}
+            </span>
+            {date && <span className="text-[0.65rem] text-muted-foreground">{date}</span>}
+          </div>
+          <h3 className="text-base font-bold text-foreground leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-3 flex-1">
+            {article.title}
+          </h3>
+          <div className="flex flex-col gap-2 mt-auto">
+            {article.topics && <TopicTags topics={article.topics} limit={2} />}
+            
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-primary hover:underline underline-offset-2 font-medium"
+            >
+              Artikel lesen →
+            </a>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  // ── DEFAULT ───────────────────────────────────────────────────────────────
+  return (
+    <article
+      className="group bg-card border border-border overflow-hidden hover:shadow-sm transition-shadow flex flex-col h-full"
+      style={{ borderTop: `3px solid ${borderColor}` }}
+    >
+      {imageUrl && (
+        <div className="overflow-hidden">
+          <img
+            src={imageUrl}
+            alt={article.title}
+            className="w-full h-36 object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            onError={(e) => {
+              const parent = e.currentTarget.parentElement;
+              if (parent) parent.style.display = "none";
+            }}
+          />
+        </div>
+      )}
+      <div className="flex flex-col flex-1 p-3">
+        <div className="flex items-center gap-1.5 mb-1.5">
+          <span className="text-[0.6rem] font-semibold text-muted-foreground uppercase tracking-wider">
             {article.source}
           </span>
-          <span className="text-[0.7rem] text-muted-foreground whitespace-nowrap">
-            {dateStr}
-          </span>
+          {date && <span className="text-[0.6rem] text-muted-foreground">{date}</span>}
         </div>
-
-        {/* Headline */}
-        <h2 className="font-serif-display text-[1.2rem] font-bold leading-snug text-foreground group-hover:text-primary transition-colors line-clamp-2">
+        <h3 className="text-sm font-bold text-foreground leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-3 flex-1">
           {article.title}
-        </h2>
-
-        {/* Summary */}
-        {article.summary && (
-          <p className="text-[0.85rem] text-muted-foreground line-clamp-3 leading-relaxed">
+        </h3>
+        {!imageUrl && article.summary && (
+          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mb-2">
             {article.summary}
           </p>
         )}
-
-        {/* Topic tags */}
-        {topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {visibleTopics.map((topic) => (
-              <span
-                key={topic}
-                className="inline-block px-2 py-0.5 text-[0.65rem] font-medium border border-border bg-background text-foreground rounded-none"
-              >
-                {TOPIC_ICONS[topic] && `${TOPIC_ICONS[topic]} `}{topic}
-              </span>
-            ))}
-            {extraCount > 0 && (
-              <span className="inline-block px-2 py-0.5 text-[0.65rem] font-medium text-muted-foreground">
-                +{extraCount}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Read more */}
-        <span className="text-xs text-muted-foreground group-hover:underline mt-auto">
-          Read full article →
-        </span>
+        <div className="flex flex-col gap-1.5 mt-auto">
+          {article.topics && <TopicTags topics={article.topics} limit={2} />}
+          
+            href={article.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-primary hover:underline underline-offset-2"
+          >
+            Artikel lesen →
+          </a>
+        </div>
       </div>
-    </a>
+    </article>
   );
 };
 
