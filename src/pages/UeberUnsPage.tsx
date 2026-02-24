@@ -40,12 +40,36 @@ const UeberUnsPage = () => {
       <Masthead />
       <main className="max-w-[700px] mx-auto px-4 py-8 font-sans">
 
+        <SectionHeading>Unsere Vision</SectionHeading>
+        <p className="text-[0.95rem] text-foreground leading-relaxed mb-4">
+          Nachrichten über Feminismus, Frauenrechte und queere Themen landen
+          selten auf den Titelseiten. Sie erscheinen, werden kurz geteilt —
+          und verschwinden wieder. Nicht weil sie unwichtig sind, sondern weil
+          die Strukturen des Mediensystems sie an den Rand drängen.
+        </p>
+        <p className="text-[0.95rem] text-foreground leading-relaxed mb-4">
+          <strong>shared ground</strong> ist unsere Antwort darauf. Wir
+          aggregieren Berichterstattung aus dem deutschsprachigen Raum,
+          die sonst untergeht — und machen sie an einem Ort sichtbar,
+          zugänglich und durchsuchbar. Kostenlos. Unabhängig. Für alle.
+        </p>
         <p className="text-[0.95rem] text-foreground leading-relaxed">
-          <strong>shared ground</strong> ist ein unabhängiger Nachrichtenaggregator
-          für feministische, queere und LGBTQIA+ Berichterstattung aus dem
-          deutschsprachigen Raum. Wir machen Nachrichten sichtbar, die
-          normalerweise untergehen. Artikel werden alle 12 Stunden aus
-          RSS-Feeds bezogen.
+          Wir glauben, dass informierte Menschen die Welt verändern.
+          Und dass der erste Schritt dazu ist, die richtigen Informationen
+          überhaupt zu finden.
+        </p>
+
+        <SectionHeading>Was wir sind</SectionHeading>
+        <p className="text-[0.95rem] text-muted-foreground leading-relaxed mb-4">
+          shared ground ist ein unabhängiger Nachrichtenaggregator — keine
+          Redaktion, kein eigener Journalismus. Wir kuratieren, was andere
+          schreiben. Wir kommentieren nicht, wir wählen nicht aus nach
+          Meinung — wir scrapen RSS-Feeds alle 12 Stunden und filtern nach
+          Keywords, die für unsere Community relevant sind.
+        </p>
+        <p className="text-[0.95rem] text-muted-foreground leading-relaxed">
+          Alle Artikel bleiben bei ihren Originalquellen. Wir verlinken immer
+          direkt dorthin. Paywalled-Inhalte erscheinen möglicherweise nicht.
         </p>
 
         <SectionHeading>Unsere Quellen</SectionHeading>
