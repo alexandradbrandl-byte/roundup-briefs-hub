@@ -9,20 +9,20 @@ interface Props {
 }
 
 const TOPIC_ICONS: Record<string, string> = {
-  "Reproduktive Rechte":    "🩺",
-  "Lohnlücke & Wirtschaft": "💰",
-  "LGBTQIA+":               "🏳‍🌈",
-  "Migration & Asyl":       "🌍",
-  "Menschenrechte":         "⚖️",
-  "Gesundheit & Medizin":   "🏥",
-  "Recht & Justiz":         "📜",
-  "Recht & Politik":        "📜",
-  "Politik & Gesellschaft": "🏛️",
-  "Politik & Regierung":    "🏛️",
-  "Kultur & Medien":        "🎭",
-  "Sport":                  "⚽",
-  "Gewalt & Sicherheit":    "🛡️",
-  "Arbeit & Wirtschaft":    "💼",
+  "Reproduktive Rechte": "Reproduktive Rechte",
+  "Lohnlucke & Wirtschaft": "Lohnlucke",
+  "LGBTQIA+": "LGBTQIA+",
+  "Migration & Asyl": "Migration",
+  "Menschenrechte": "Menschenrechte",
+  "Gesundheit & Medizin": "Gesundheit",
+  "Recht & Justiz": "Recht",
+  "Recht & Politik": "Recht",
+  "Politik & Gesellschaft": "Politik",
+  "Politik & Regierung": "Politik",
+  "Kultur & Medien": "Kultur",
+  "Sport": "Sport",
+  "Gewalt & Sicherheit": "Gewalt",
+  "Arbeit & Wirtschaft": "Arbeit",
 };
 
 function formatDate(dateStr?: string): string {
@@ -51,18 +51,17 @@ function TopicTags({ topics, limit = 3 }: { topics: string; limit?: number }) {
     <div className="flex flex-wrap gap-1">
       {list.map((t) => {
         const colors = TOPIC_COLORS[t];
-        const icon = TOPIC_ICONS[t] ?? "";
         return (
           <span
             key={t}
-            className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[0.62rem] font-medium rounded-sm border"
+            className="inline-flex items-center px-1.5 py-0.5 text-[0.62rem] font-medium rounded-sm border"
             style={
               colors
                 ? { backgroundColor: colors.bg, color: colors.text, borderColor: colors.border }
                 : { backgroundColor: "var(--secondary)", color: "var(--foreground)", borderColor: "var(--border)" }
             }
           >
-            {icon} {t}
+            {t}
           </span>
         );
       })}
@@ -70,10 +69,21 @@ function TopicTags({ topics, limit = 3 }: { topics: string; limit?: number }) {
   );
 }
 
+const ArtikelLink = ({ href, className }: { href: string; className: string }) => (
+  <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+    {"Artikel lesen \u2192"}
+  </a>
+);
+
 const ArticleCard = ({ article, variant = "default" }: Props) => {
   const borderColor = getSourceBorderColor(article.source);
   const date = formatDate(article.published_at || article.scraped_at);
   const imageUrl = article.image_url;
+
+  const handleImgError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const parent = e.currentTarget.parentElement;
+    if (parent) parent.style.display = "none";
+  };
 
   if (variant === "hero") {
     return (
@@ -85,18 +95,15 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
                 src={imageUrl}
                 alt={article.title}
                 className="w-full h-56 sm:h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                onError={(e) => {
-                  const parent = e.currentTarget.parentElement;
-                  if (parent) parent.style.display = "none";
-                }}
+                onError={handleImgError}
               />
             </div>
           )}
           <div
             className="flex flex-col justify-between p-5 sm:p-6 flex-1"
             style={{
-              borderLeft: imageUrl ? `3px solid ${borderColor}` : undefined,
-              borderTop: !imageUrl ? `3px solid ${borderColor}` : undefined,
+              borderLeft: imageUrl ? "3px solid " + borderColor : undefined,
+              borderTop: !imageUrl ? "3px solid " + borderColor : undefined,
             }}
           >
             <div>
@@ -104,7 +111,9 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
                 <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {article.source}
                 </span>
-                {date && <span className="text-xs text-muted-foreground">{date}</span>}
+                {date && (
+                  <span className="text-xs text-muted-foreground">{date}</span>
+                )}
               </div>
               <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground leading-snug mb-3 group-hover:text-primary transition-colors">
                 {article.title}
@@ -117,14 +126,10 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
             </div>
             <div className="flex flex-col gap-3 mt-2">
               {article.topics && <TopicTags topics={article.topics} limit={3} />}
-              
+              <ArtikelLink
                 href={article.link}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-xs font-semibold text-primary hover:underline underline-offset-2"
-              >
-                {"Artikel lesen \u2192"}
-              </a>
+              />
             </div>
           </div>
         </div>
@@ -136,7 +141,7 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
     return (
       <article
         className="group bg-card border border-border overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full"
-        style={{ borderTop: `3px solid ${borderColor}` }}
+        style={{ borderTop: "3px solid " + borderColor }}
       >
         {imageUrl && (
           <div className="overflow-hidden">
@@ -144,10 +149,7 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
               src={imageUrl}
               alt={article.title}
               className="w-full h-44 object-cover group-hover:scale-[1.02] transition-transform duration-300"
-              onError={(e) => {
-                const parent = e.currentTarget.parentElement;
-                if (parent) parent.style.display = "none";
-              }}
+              onError={handleImgError}
             />
           </div>
         )}
@@ -156,21 +158,19 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
             <span className="text-[0.65rem] font-semibold text-muted-foreground uppercase tracking-wider">
               {article.source}
             </span>
-            {date && <span className="text-[0.65rem] text-muted-foreground">{date}</span>}
+            {date && (
+              <span className="text-[0.65rem] text-muted-foreground">{date}</span>
+            )}
           </div>
           <h3 className="text-base font-bold text-foreground leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-3 flex-1">
             {article.title}
           </h3>
           <div className="flex flex-col gap-2 mt-auto">
             {article.topics && <TopicTags topics={article.topics} limit={2} />}
-            
+            <ArtikelLink
               href={article.link}
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-xs text-primary hover:underline underline-offset-2 font-medium"
-            >
-              {"Artikel lesen \u2192"}
-            </a>
+            />
           </div>
         </div>
       </article>
@@ -180,7 +180,7 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
   return (
     <article
       className="group bg-card border border-border overflow-hidden hover:shadow-sm transition-shadow flex flex-col h-full"
-      style={{ borderTop: `3px solid ${borderColor}` }}
+      style={{ borderTop: "3px solid " + borderColor }}
     >
       {imageUrl && (
         <div className="overflow-hidden">
@@ -188,10 +188,7 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
             src={imageUrl}
             alt={article.title}
             className="w-full h-36 object-cover group-hover:scale-[1.02] transition-transform duration-300"
-            onError={(e) => {
-              const parent = e.currentTarget.parentElement;
-              if (parent) parent.style.display = "none";
-            }}
+            onError={handleImgError}
           />
         </div>
       )}
@@ -200,7 +197,9 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
           <span className="text-[0.6rem] font-semibold text-muted-foreground uppercase tracking-wider">
             {article.source}
           </span>
-          {date && <span className="text-[0.6rem] text-muted-foreground">{date}</span>}
+          {date && (
+            <span className="text-[0.6rem] text-muted-foreground">{date}</span>
+          )}
         </div>
         <h3 className="text-sm font-bold text-foreground leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-3 flex-1">
           {article.title}
@@ -212,14 +211,10 @@ const ArticleCard = ({ article, variant = "default" }: Props) => {
         )}
         <div className="flex flex-col gap-1.5 mt-auto">
           {article.topics && <TopicTags topics={article.topics} limit={2} />}
-          
+          <ArtikelLink
             href={article.link}
-            target="_blank"
-            rel="noopener noreferrer"
             className="text-xs text-primary hover:underline underline-offset-2"
-          >
-            {"Artikel lesen \u2192"}
-          </a>
+          />
         </div>
       </div>
     </article>
