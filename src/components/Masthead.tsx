@@ -18,7 +18,6 @@ const NAV_LINKS = [
 const Masthead = ({ stats }: MastheadProps) => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const lastScraped = stats?.last_scraped
     ? format(new Date(stats.last_scraped), "d MMM yyyy, HH:mm")
@@ -26,10 +25,7 @@ const Masthead = ({ stats }: MastheadProps) => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        menuRef.current && !menuRef.current.contains(e.target as Node) &&
-        buttonRef.current && !buttonRef.current.contains(e.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
       }
     };
@@ -52,23 +48,39 @@ const Masthead = ({ stats }: MastheadProps) => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 sm:ml-auto sm:flex-col sm:items-end sm:gap-2 relative z-10">
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <button
-              ref={buttonRef}
-              onClick={() => setMenuOpen((v) => !v)}
-              className="flex flex-col gap-1.5 p-1 text-foreground hover:opacity-70 transition-opacity"
-              aria-label="Menu"
-            >
-              <span className="block w-5 h-0.5 bg-current" />
-              <span className="block w-5 h-0.5 bg-current" />
-              <span className="block w-5 h-0.5 bg-current" />
-            </button>
-          </div>
+        <div ref={menuRef} className="flex items-center gap-3 sm:ml-auto relative z-[9999]">
+          <ThemeToggle />
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            className="flex flex-col gap-1.5 p-1 text-foreground hover:opacity-70 transition-opacity"
+            aria-label="Menu"
+          >
+            <span className="block w-5 h-0.5 bg-current" />
+            <span className="block w-5 h-0.5 bg-current" />
+            <span className="block w-5 h-0.5 bg-current" />
+          </button>
+
+          {menuOpen && (
+            <div className="absolute right-0 top-10 w-44 bg-background border border-border shadow-md rounded-sm py-1">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setMenuOpen(false)}
+                  className={`block px-4 py-2.5 text-sm font-sans transition-colors hover:bg-secondary ${
+                    location.pathname === link.to
+                      ? "text-foreground font-semibold"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          )}
 
           {location.pathname === "/" && stats && (
-            <div className="hidden sm:block text-right text-xs text-muted-foreground uppercase tracking-wider font-sans leading-relaxed">
+            <div className="hidden sm:block text-right text-xs text-muted-foreground uppercase tracking-wider font-sans leading-relaxed absolute right-0 top-10 mt-32">
               <div>{stats.total.toLocaleString()} Artikel</div>
               {lastScraped && <div>Aktualisiert {lastScraped}</div>}
             </div>
@@ -77,28 +89,6 @@ const Masthead = ({ stats }: MastheadProps) => {
       </div>
 
       <hr className="mt-4 border-border" />
-
-      {menuOpen && (
-        <div
-          ref={menuRef}
-          className="fixed top-16 right-4 w-44 bg-background border border-border shadow-md rounded-sm py-1 z-[9999]"
-        >
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              onClick={() => setMenuOpen(false)}
-              className={`block px-4 py-2.5 text-sm font-sans transition-colors hover:bg-secondary ${
-                location.pathname === link.to
-                  ? "text-foreground font-semibold"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-      )}
     </header>
   );
 };
