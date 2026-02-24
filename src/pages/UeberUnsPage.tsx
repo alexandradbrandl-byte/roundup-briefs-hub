@@ -1,51 +1,38 @@
 import Masthead from "@/components/Masthead";
 import SiteFooter from "@/components/SiteFooter";
 
-const KEYWORDS = {
-  "Frauen & Feminismus": [
-    "Frauen", "Frau", "Mädchen", "weiblich", "Feminismus", "feministisch",
-    "Gleichstellung", "Gender Pay Gap", "gleicher Lohn", "Lohnlücke",
-    "reproduktive Rechte", "Abtreibung", "Schwangerschaft", "Mutterschaft",
-    "Frauenrechte", "Sexismus", "Misogynie", "Patriarchat", "Periodenarmut",
-    "Menstruation", "Frauengesundheit", "häusliche Gewalt", "geschlechtsspezifische Gewalt",
-    "sexuelle Belästigung", "sexueller Übergriff", "Vergewaltigung", "MeToo",
-    "Femizid", "Zwangsheirat", "Frauen in Führungspositionen", "gläserne Decke",
-    "Elternzeit", "Mutterschutz", "Leihmutterschaft", "reproduktive Gerechtigkeit",
-    "körperliche Selbstbestimmung", "Menschenhandel", "Essstörung",
-    "Verhütung", "IVF", "Stillen",
-  ],
-  "LGBTQIA+": [
-    "LGBT", "LGBTQ", "LGBTQIA", "queer", "schwul", "lesbisch", "bisexuell",
-    "transgender", "trans", "nicht-binär", "nonbinary", "intersexuell", "asexuell",
-    "pansexuell", "Pride", "Pride Parade", "Coming Out", "Homo-Ehe", "Trans-Rechte",
-    "Ehegleichstellung", "Regenbogen", "Homophobie", "Transphobie", "Biphobie",
-    "Konversionstherapie", "geschlechtsangleichend", "Geschlechtsidentität",
-    "Pronomen", "Drag Queen", "Queer-Community",
-  ],
-  "Migration & Asyl": [
-    "Migration", "Migrant", "Flüchtling", "Asyl", "Asylsuchende", "geflüchtet",
-    "Abschiebung", "Grenze", "Visum", "Staatsbürgerschaft", "Staatenlosigkeit",
-    "Abschiebehaft", "Vertreibung", "Diaspora", "Xenophobie", "Menschenhandel",
-  ],
-  "Menschenrechte": [
-    "Menschenrechte", "Bürgerrechte", "Diskriminierung", "Vorurteil",
-    "Gleichheit", "Gerechtigkeit", "Unterdrückung", "Verfolgung", "Minderheitenrechte",
-    "indigene Rechte", "Rassismus", "Antirassismus", "Protest", "Aktivismus",
-    "Zensur", "Pressefreiheit", "Genozid", "Kriegsverbrechen", "Behindertenrechte",
-  ],
-};
-
 const QUELLEN = {
   "Allgemeine Nachrichten (nach Keywords gefiltert)": [
-    "Der Spiegel", "Zeit Online", "Süddeutsche Zeitung", "taz", "Frankfurter Rundschau",
-    "Der Standard", "Der Falter", "NZZ", "SRF News", "ARD", "ZDF", "ORF",
-    "Deutschlandfunk", "MDR", "WDR", "RBB",
+    "Der Spiegel", "Zeit Online", "Süddeutsche Zeitung", "taz",
+    "Frankfurter Rundschau", "Der Standard", "Der Falter", "NZZ",
+    "SRF News", "ARD", "ZDF", "ORF", "Deutschlandfunk", "MDR", "WDR", "RBB",
   ],
-  "Feministische Publikationen (alle Artikel)": [
-    "EMMA", "Missy Magazine",
+  "Feministische Publikationen (alle Artikel)": ["EMMA", "Missy Magazine"],
+  "LGBTQIA+ Publikationen (alle Artikel)": ["queer.de", "L-MAG"],
+};
+
+const KEYWORDS = {
+  "Frauen & Feminismus": [
+    "Frauen", "Frau", "Feminismus", "Gleichstellung", "Lohnlücke",
+    "reproduktive Rechte", "Abtreibung", "Frauenrechte", "Sexismus",
+    "Misogynie", "Patriarchat", "Periodenarmut", "Frauengesundheit",
+    "häusliche Gewalt", "sexuelle Belästigung", "Femizid", "Elternzeit",
+    "körperliche Selbstbestimmung", "Verhütung", "IVF",
   ],
-  "LGBTQIA+ Publikationen (alle Artikel)": [
-    "queer.de", "L-MAG",
+  "LGBTQIA+": [
+    "LGBT", "queer", "schwul", "lesbisch", "bisexuell", "transgender",
+    "trans", "nicht-binär", "intersexuell", "asexuell", "Pride",
+    "Coming Out", "Homo-Ehe", "Trans-Rechte", "Homophobie", "Transphobie",
+    "Pronomen", "Drag Queen",
+  ],
+  "Migration & Asyl": [
+    "Migration", "Flüchtling", "Asyl", "Asylsuchende", "Abschiebung",
+    "Grenze", "Staatsbürgerschaft", "Vertreibung", "Xenophobie",
+  ],
+  "Menschenrechte": [
+    "Menschenrechte", "Bürgerrechte", "Diskriminierung",
+    "Gleichheit", "Gerechtigkeit", "Rassismus", "Antirassismus",
+    "Protest", "Aktivismus", "Pressefreiheit", "Behindertenrechte",
   ],
 };
 
@@ -74,15 +61,13 @@ const UeberUnsPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Masthead />
-
       <main className="max-w-[700px] mx-auto px-4 py-8 font-sans">
 
         <p className="text-[0.95rem] text-foreground leading-relaxed">
           <strong>shared ground</strong> ist ein unabhängiger Nachrichtenaggregator
           für feministische, queere und LGBTQIA+ Berichterstattung aus dem deutschsprachigen Raum.
-          Wir machen Nachrichten sichtbar, die normalerweise untergehen, weil sie keine Headliner sind.
-          Artikel werden alle 12 Stunden aus RSS-Feeds bezogen (MEZ). Nur öffentlich zugängliche
-          Artikel werden angezeigt — Paywalled-Inhalte erscheinen möglicherweise nicht.
+          Wir machen Nachrichten sichtbar, die normalerweise untergehen.
+          Artikel werden alle 12 Stunden aus RSS-Feeds bezogen.
         </p>
 
         <SectionHeading>Unsere Quellen</SectionHeading>
@@ -97,8 +82,49 @@ const UeberUnsPage = () => {
           </div>
         ))}
 
+        <SectionHeading>Wie werden Artikel ausgewählt?</SectionHeading>
         <p className="text-[0.9rem] text-muted-foreground leading-relaxed mb-6">
-          Bei allgemeinen Nachrichtenquellen werden Artikel nur aufgenommen, wenn sie mindestens
-          eines der folgenden Keywords in Titel oder Zusammenfassung enthalten.
-          Spezialpublikationen (Feminismus, LGBTQIA+) werden vollständig übernommen.
+          Allgemeine Nachrichtenquellen werden nur aufgenommen wenn sie Keywords enthalten. Spezialpublikationen werden vollständig übernommen.
         </p>
+        {Object.entries(KEYWORDS).map(([kategorie, woerter]) => (
+          <div key={kategorie} className="mb-6">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-1">
+              {kategorie}
+            </p>
+            <p className="text-[0.8rem] text-muted-foreground leading-relaxed">
+              {woerter.join(", ")}
+            </p>
+          </div>
+        ))}
+
+        <SectionHeading>Themen</SectionHeading>
+        <p className="text-[0.9rem] text-muted-foreground leading-relaxed mb-4">
+          Artikel werden automatisch einem oder mehreren Themen zugeordnet.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {THEMEN_LISTE.map((t) => (
+            <span key={t.label} className="inline-block px-3 py-1 text-xs font-medium border border-border bg-secondary text-foreground rounded-sm">
+              {t.emoji} {t.label}
+            </span>
+          ))}
+        </div>
+
+        <SectionHeading>Kontakt</SectionHeading>
+        <p className="text-[0.9rem] text-muted-foreground leading-relaxed">
+          Fragen, Feedback oder Quellenvorschläge?{" "}
+          <a href="mailto:alexandra.d.brandl@gmail.com" className="text-foreground underline underline-offset-2 hover:opacity-70 transition-opacity">
+            Schreib uns.
+          </a>
+        </p>
+
+        <p className="mt-12 text-xs text-muted-foreground border-t border-border pt-4">
+          shared ground · Aktualisierung alle 12 Stunden · Unabhängig & kostenlos
+        </p>
+
+      </main>
+      <SiteFooter />
+    </div>
+  );
+};
+
+export default UeberUnsPage;
