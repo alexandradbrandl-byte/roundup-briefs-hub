@@ -23,18 +23,8 @@ export interface Stats {
 
 export const TOPICS = [
   { label: "Alle Themen", emoji: "✨" },
-  { label: "Reproduktive Rechte", emoji: "🩺" },
-  { label: "Lohnlücke & Wirtschaft", emoji: "💰" },
+  { label: "Frauen & Feminismus", emoji: "♀️" },
   { label: "LGBTQIA+", emoji: "🏳️‍🌈" },
-  { label: "Migration & Asyl", emoji: "🌍" },
-  { label: "Menschenrechte", emoji: "⚖️" },
-  { label: "Gesundheit & Medizin", emoji: "🏥" },
-  { label: "Recht & Justiz", emoji: "📜" },
-  { label: "Politik & Gesellschaft", emoji: "🏛️" },
-  { label: "Kultur & Medien", emoji: "🎭" },
-  { label: "Sport", emoji: "⚽" },
-  { label: "Gewalt & Sicherheit", emoji: "🛡️" },
-  { label: "Arbeit & Wirtschaft", emoji: "💼" },
 ] as const;
 
 export const TIME_RANGES = [
@@ -42,27 +32,12 @@ export const TIME_RANGES = [
 ] as const;
 
 export const TOPIC_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  "Reproduktive Rechte":    { bg: "#FFE5EF", text: "#C8003C", border: "#F0ADC8" },
-  "Lohnlücke & Wirtschaft": { bg: "#FFF3E0", text: "#E65100", border: "#FFCC80" },
-  "LGBTQIA+":               { bg: "#EDE7F6", text: "#4A1FA8", border: "#B39DDB" },
-  "Migration & Asyl":       { bg: "#E0F7FA", text: "#006064", border: "#80DEEA" },
-  "Menschenrechte":         { bg: "#FFEBEE", text: "#B71C1C", border: "#EF9A9A" },
-  "Gesundheit & Medizin":   { bg: "#E8F5E9", text: "#1B5E20", border: "#A5D6A7" },
-  "Recht & Justiz":         { bg: "#F3E5F5", text: "#4A148C", border: "#CE93D8" },
-  "Politik & Gesellschaft": { bg: "#E3F2FD", text: "#0D47A1", border: "#90CAF9" },
-  "Kultur & Medien":        { bg: "#FFF8E1", text: "#E65100", border: "#FFD54F" },
-  "Sport":                  { bg: "#E8F5E9", text: "#2E7D32", border: "#81C784" },
-  "Gewalt & Sicherheit":    { bg: "#FFEBEE", text: "#C62828", border: "#EF9A9A" },
-  "Arbeit & Wirtschaft":    { bg: "#ECEFF1", text: "#37474F", border: "#B0BEC5" },
+  "Frauen & Feminismus": { bg: "#FFE5EF", text: "#C8003C", border: "#F0ADC8" },
+  "LGBTQIA+":            { bg: "#EDE7F6", text: "#4A1FA8", border: "#B39DDB" },
 };
 
-export const LGBTQIA_SOURCES = new Set([
-  "queer.de", "L-MAG",
-]);
-
-export const FEMINIST_SOURCES = new Set([
-  "EMMA", "Missy Magazine",
-]);
+export const LGBTQIA_SOURCES = new Set(["queer.de", "L-MAG"]);
+export const FEMINIST_SOURCES = new Set(["EMMA", "Missy Magazine"]);
 
 export function getSourceBorderColor(source: string): string {
   if (LGBTQIA_SOURCES.has(source)) return "#4A1FA8";
