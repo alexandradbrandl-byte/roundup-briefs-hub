@@ -20,13 +20,12 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MapPage />} />
-          <Route path="/de" element={<FeedPage country="de" countryName="Deutschland" />} />
-          <Route path="/at" element={<FeedPage country="at" countryName="Österreich" />} />
-          <Route path="/ch" element={<FeedPage country="ch" countryName="Schweiz" />} />
+          <Route path="/de" element={<FeedPage country="Germany" countryName="Deutschland" />} />
+          <Route path="/at" element={<FeedPage country="Austria" countryName={"\u00d6sterreich"} />} />
+          <Route path="/ch" element={<FeedPage country="Switzerland" countryName="Schweiz" />} />
           <Route path="/themen" element={<ThemenPage />} />
           <Route path="/newsletter" element={<NewsletterPage />} />
           <Route path="/ueber-uns" element={<UeberUnsPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
