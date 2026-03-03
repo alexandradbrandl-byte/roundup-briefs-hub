@@ -18,6 +18,11 @@ interface TooltipState {
   isLive: boolean;
 }
 
+interface Position {
+  coordinates: [number, number];
+  zoom: number;
+}
+
 const NAV_LINK_STYLE: React.CSSProperties = {
   fontFamily: "sans-serif",
   fontSize: "0.75rem",
@@ -26,9 +31,46 @@ const NAV_LINK_STYLE: React.CSSProperties = {
   letterSpacing: "0.04em",
 };
 
+const ZOOM_BTN_STYLE: React.CSSProperties = {
+  width: 32,
+  height: 32,
+  background: "#1a1a1a",
+  border: "1px solid #333",
+  borderRadius: "4px",
+  color: "#aaa",
+  fontSize: "1.2rem",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  userSelect: "none",
+};
+
 const MapPage = () => {
   const navigate = useNavigate();
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
+  const [position, setPosition] = useState<Position>({
+    coordinates: [10, 20],
+    zoom: 1,
+  });
+
+  const handleMoveEnd = (pos: { coordinates: [number, number]; zoom: number }) => {
+    setPosition(pos);
+  };
+
+  const handleZoomIn = () => {
+    setPosition((prev) => ({
+      ...prev,
+      zoom: Math.min(prev.zoom * 1.5, 12),
+    }));
+  };
+
+  const handleZoomOut = () => {
+    setPosition((prev) => ({
+      ...prev,
+      zoom: Math.max(prev.zoom / 1.5, 1),
+    }));
+  };
 
   const handleMouseMove = (
     e: React.MouseEvent,
@@ -93,7 +135,13 @@ const MapPage = () => {
           style={{ width: "100%", height: "100%" }}
           projectionConfig={{ scale: 160 }}
         >
-          <ZoomableGroup center={[10, 20]} zoom={1}>
+          <ZoomableGroup
+            center={position.coordinates}
+            zoom={position.zoom}
+            onMoveEnd={handleMoveEnd}
+            minZoom={1}
+            maxZoom={12}
+          >
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
                 geographies.map((geo) => {
@@ -152,7 +200,7 @@ const MapPage = () => {
             }}
           />
           <span style={{ fontFamily: "sans-serif", fontSize: "0.75rem", color: "#888" }}>
-            {"\u0076erf\u00fcgbar"}
+            {"verf\u00fcgbar"}
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -176,6 +224,21 @@ const MapPage = () => {
         <a href="/themen" style={NAV_LINK_STYLE}>Themen</a>
         <a href="/newsletter" style={NAV_LINK_STYLE}>Newsletter</a>
         <a href="/ueber-uns" style={NAV_LINK_STYLE}>{"\u00dcber uns"}</a>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: "5rem",
+          right: "1.5rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.4rem",
+          zIndex: 20,
+        }}
+      >
+        <button onClick={handleZoomIn} style={ZOOM_BTN_STYLE}>+</button>
+        <button onClick={handleZoomOut} style={ZOOM_BTN_STYLE}>-</button>
       </div>
 
       {tooltip && tooltip.name && (
