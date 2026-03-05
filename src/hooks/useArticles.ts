@@ -19,21 +19,34 @@ const defaultFilters: Filters = {
   search: "",
 };
 
+function dateStrDaysAgo(days: number): string {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+}
+
 export function useArticles(country?: string) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [loadingOlder, setLoadingOlder] = useState(false);
+  const [olderLoaded, setOlderLoaded] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       setError(null);
+      setOlderLoaded(false);
       try {
-        const countryParam = country ? `&country=${country}` : "";
+        const countryParam = country ? `&country=${encodeURIComponent(country)}` : "";
+        // Country pages: load only last 3 weeks initially (faster, smaller payload)
+        const timeParam = country ? `&date_from=${dateStrDaysAgo(21)}` : "";
+        const limit = country ? 100 : 500;
+
         const [articlesRes, statsRes] = await Promise.all([
-          fetch(`${API_BASE}/api/articles?limit=500${countryParam}`),
+          fetch(`${API_BASE}/api/articles?limit=${limit}${countryParam}${timeParam}`),
           fetch(`${API_BASE}/api/stats`),
         ]);
         if (!articlesRes.ok || !statsRes.ok) throw new Error("Failed to fetch");
@@ -49,6 +62,26 @@ export function useArticles(country?: string) {
     }
     fetchData();
   }, [country]);
+
+  const loadOlderArticles = useCallback(async () => {
+    if (!country || olderLoaded || loadingOlder) return;
+    setLoadingOlder(true);
+    try {
+      const threeWeeksAgo = dateStrDaysAgo(21);
+      const threeMonthsAgo = dateStrDaysAgo(90);
+      const res = await fetch(
+        `${API_BASE}/api/articles?limit=200&country=${encodeURIComponent(country)}&date_from=${threeMonthsAgo}&date_to=${threeWeeksAgo}`
+      );
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setArticles((prev) => [...prev, ...(Array.isArray(data) ? data : [])]);
+      setOlderLoaded(true);
+    } catch {
+      // silently ignore — user can retry
+    } finally {
+      setLoadingOlder(false);
+    }
+  }, [country, olderLoaded, loadingOlder]);
 
   const sources = useMemo(() => {
     const s = new Set(articles.map((a) => a.source).filter(Boolean));
@@ -117,5 +150,9 @@ export function useArticles(country?: string) {
     sources,
     isFiltered,
     clearFilters,
+    loadOlderArticles,
+    loadingOlder,
+    olderLoaded,
+    hasOlderAvailable: !!country && !olderLoaded,
   };
 }

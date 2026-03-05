@@ -22,6 +22,9 @@ const FeedPage = ({ country, countryName }: FeedPageProps) => {
     sources,
     isFiltered,
     clearFilters,
+    loadOlderArticles,
+    loadingOlder,
+    hasOlderAvailable,
   } = useArticles(country);
 
   return (
@@ -56,6 +59,18 @@ const FeedPage = ({ country, countryName }: FeedPageProps) => {
           isFiltered={isFiltered}
           clearFilters={clearFilters}
         />
+
+        {!loading && hasOlderAvailable && (
+          <div className="max-w-[1100px] mx-auto px-4 py-6 text-center">
+            <button
+              onClick={loadOlderArticles}
+              disabled={loadingOlder}
+              className="text-xs text-muted-foreground hover:text-foreground border border-border px-4 py-2 rounded-sm transition-colors disabled:opacity-50"
+            >
+              {loadingOlder ? "Wird geladen…" : "Ältere Artikel laden (bis 3 Monate)"}
+            </button>
+          </div>
+        )}
       </div>
 
       <SiteFooter />
